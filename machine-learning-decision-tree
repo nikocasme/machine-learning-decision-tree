@@ -1,0 +1,69 @@
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split, cross_val_score, StratifiedKFold
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+from sklearn import tree
+import pydotplus
+import matplotlib.image as pltimg
+
+# Read data
+data = pd.read_excel("xxxxx")
+
+# Data Exploration
+print(data.shape)
+print(data.head(5))
+print(data.groupby("NOMBRE").size())
+print(data.groupby("PROYECTO").size())
+
+# Data Preprocessing
+data['lug_boot'].replace(('big', 'med', 'small'), (3, 2, 1), inplace=True)
+data['Buying'].replace(('vhigh', 'high', 'med', 'low'), (4, 3, 2, 1), inplace=True)
+data['safety'].replace(('high', 'med', 'low'), (3, 2, 1), inplace=True)
+data['Person'].replace(('2', '4', 'more'), (3, 2, 1), inplace=True)
+data['Doors'].replace(('2', '3', '4', '5more'), (4, 3, 2, 1), inplace=True)
+data['Maintenance'].replace(('high', 'low', 'med', 'vhigh'), (4, 3, 2, 1), inplace=True)
+
+# Visualizations
+sns.pairplot(data)
+plt.show()
+
+# Model Evaluation
+X = data.iloc[:, 0:6]
+y = data.iloc[:, 6]
+X_train, X_validation, y_train, y_validation = train_test_split(X, y, test_size=0.20, random_state=1, shuffle=True)
+
+models = [('LR', LogisticRegression(solver='liblinear', multi_class='ovr')),
+          ('CART', DecisionTreeClassifier())]
+
+results = []
+names = []
+for name, model in models:
+    kfold = StratifiedKFold(n_splits=20)
+    cv_results = cross_val_score(model, X_train, y_train, cv=kfold, scoring='accuracy')
+    results.append(cv_results)
+    names.append(name)
+    print('%s: %f (%f)' % (name, cv_results.mean(), cv_results.std()))
+
+# Model Training and Evaluation
+model = DecisionTreeClassifier()
+model.fit(X_train, y_train)
+predictions = model.predict(X_validation)
+
+print("Accuracy:", accuracy_score(y_validation, predictions))
+print("Confusion Matrix:\n", confusion_matrix(y_validation, predictions))
+print("Classification Report:\n", classification_report(y_validation, predictions))
+
+# Save Decision Tree Visualization
+dot_data = tree.export_graphviz(model, out_file=None, feature_names=["Buying", "Maintenance", "Doors", "Person", "lug_boot", "safety"], filled=True, rounded=True, special_characters=True)
+graph = pydotplus.graph_from_dot_data(dot_data)
+graph.write_png('mydecisiontree.png')
+
+# Display Decision Tree
+img = pltimg.imread('mydecisiontree.png')
+plt.imshow(img)
+plt.axis('off')
+plt.show()
