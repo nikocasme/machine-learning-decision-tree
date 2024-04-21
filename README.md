@@ -19,7 +19,7 @@ Experiment with different machine learning algorithms or hyperparameters.
 Extend the project by adding more visualizations, optimizations, or additional features.
 
 ## Credits
-This project was created by nikocasme.
+This project was created by **nikocasme**.
 
 ## License
 This project is licensed under the MIT License.
