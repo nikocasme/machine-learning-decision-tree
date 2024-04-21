@@ -7,4 +7,3 @@ This repository contains code for a machine learning project that uses a Decisio
 
 The project includes data preprocessing, model training, evaluation, and visualization steps. It demonstrates the use of pandas, scikit-learn, matplotlib, seaborn, and other libraries for machine learning tasks.
 
-## File Structure
