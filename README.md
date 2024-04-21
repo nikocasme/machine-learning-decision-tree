@@ -1,7 +1,7 @@
 # machine-learning-decision-tree
 # Machine Learning Portfolio: Decision Tree Classifier
 
-This repository contains code for a machine learning project that uses a Decision Tree Classifier to predict car acceptability based on various attributes.
+This repository contains code for a machine learning project that uses a Decision Tree Classifier to predict clients acceptability based on various attributes.
 
 ## Overview
 
